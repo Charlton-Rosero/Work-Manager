@@ -7,7 +7,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.background.R
 
-class BlurWorker (ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
+private const val TAG = "BlurWorker"
+class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
     override fun doWork(): Result {
         val appContext = applicationContext
@@ -21,6 +22,7 @@ class BlurWorker (ctx: Context, params: WorkerParameters) : Worker(ctx, params) 
 
             val output = blurBitmap(picture, appContext)
 
+            // Write bitmap to a temp file
             val outputUri = writeBitmapToFile(appContext, output)
 
             makeStatusNotification("Output is $outputUri", appContext)
@@ -30,8 +32,5 @@ class BlurWorker (ctx: Context, params: WorkerParameters) : Worker(ctx, params) 
             Log.e(TAG, "Error applying blur")
             Result.failure()
         }
-    }
-    companion object {
-        private const val TAG = "BlurWorker"
     }
 }
